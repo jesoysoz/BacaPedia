@@ -1,59 +1,369 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# BacaPedia - Backend API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Backend API untuk aplikasi **BacaPedia**, yaitu sistem manajemen perpustakaan yang menyediakan fitur autentikasi pengguna, pengelolaan kategori dan buku, serta sistem peminjaman dan pengembalian buku.
 
-## About Laravel
+## Teknologi
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+* PHP 8.2+
+* Laravel 12
+* Laravel Sanctum 4
+* MySQL
+* Composer
+* Postman untuk pengujian API
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Fitur
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+* Register dan login pengguna
+* Authentication menggunakan Laravel Sanctum
+* Role-based authorization
 
-## Learning Laravel
+  * `admin`
+  * `petugas`
+  * `anggota`
+* CRUD kategori buku
+* CRUD buku
+* Validasi data buku
+* Peminjaman buku
+* Pengembalian buku
+* Pengurangan stok saat buku dipinjam
+* Penambahan stok saat buku dikembalikan
+* Perhitungan denda keterlambatan otomatis
+* Pembatasan akses data peminjaman berdasarkan role
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Persyaratan Sistem
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Pastikan perangkat sudah memiliki:
 
-## Laravel Sponsors
+* PHP >= 8.2
+* Composer
+* MySQL
+* Git
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Instalasi
 
-### Premium Partners
+### 1. Clone Repository
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```bash
+git clone <URL_REPOSITORY>
+```
 
-## Contributing
+Masuk ke folder project:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+cd BacaPedia
+```
 
-## Code of Conduct
+### 2. Install Dependency
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+composer install
+```
 
-## Security Vulnerabilities
+### 3. Konfigurasi Environment
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Buat file `.env` dari `.env.example`:
 
-## License
+```bash
+copy .env.example .env
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Untuk Linux/macOS:
+
+```bash
+cp .env.example .env
+```
+
+Kemudian generate application key:
+
+```bash
+php artisan key:generate
+```
+
+### 4. Konfigurasi Database
+
+Buat database baru di MySQL, kemudian sesuaikan konfigurasi database pada file `.env`.
+
+Contoh:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=bacapedia
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+Sesuaikan `DB_DATABASE`, `DB_USERNAME`, dan `DB_PASSWORD` dengan konfigurasi MySQL pada perangkat masing-masing.
+
+### 5. Jalankan Migration
+
+```bash
+php artisan migrate
+```
+
+Migration akan membuat tabel yang dibutuhkan oleh sistem, termasuk:
+
+* users
+* categories
+* books
+* loans
+* personal_access_tokens
+
+### 6. Jalankan Server
+
+```bash
+php artisan serve
+```
+
+Secara default API dapat diakses melalui:
+
+```text
+http://localhost:8000
+```
+
+Endpoint API menggunakan prefix:
+
+```text
+http://localhost:8000/api
+```
+
+## Authentication
+
+BacaPedia menggunakan **Laravel Sanctum** untuk authentication berbasis Bearer Token.
+
+Setelah berhasil login, API akan memberikan token.
+
+Gunakan token tersebut pada Postman:
+
+```text
+Authorization
+Type: Bearer Token
+Token: <token>
+```
+
+Endpoint yang membutuhkan authentication harus menggunakan Bearer Token.
+
+## Role Pengguna
+
+| Role      | Keterangan                                                          |
+| --------- | ------------------------------------------------------------------- |
+| `admin`   | Memiliki akses penuh terhadap pengelolaan kategori dan buku         |
+| `petugas` | Dapat menambahkan dan mengubah data buku                            |
+| `anggota` | Dapat melihat buku dan melakukan peminjaman serta pengembalian buku |
+
+Role default pengguna baru adalah:
+
+```text
+anggota
+```
+
+## Daftar Endpoint API
+
+### Authentication
+
+| Method | Endpoint        | Keterangan                              | Auth  |
+| ------ | --------------- | --------------------------------------- | ----- |
+| POST   | `/api/register` | Registrasi pengguna                     | Tidak |
+| POST   | `/api/login`    | Login pengguna                          | Tidak |
+| POST   | `/api/logout`   | Logout pengguna                         | Ya    |
+| GET    | `/api/user`     | Mendapatkan data user yang sedang login | Ya    |
+
+### Categories
+
+| Method | Endpoint                     | Keterangan                  | Role             |
+| ------ | ---------------------------- | --------------------------- | ---------------- |
+| GET    | `/api/categories`            | Menampilkan semua kategori  | Semua user login |
+| GET    | `/api/categories/{category}` | Menampilkan detail kategori | Semua user login |
+| POST   | `/api/categories`            | Menambahkan kategori        | Admin            |
+| PUT    | `/api/categories/{category}` | Mengubah kategori           | Admin            |
+| DELETE | `/api/categories/{category}` | Menghapus kategori          | Admin            |
+
+### Books
+
+| Method | Endpoint            | Keterangan              | Role             |
+| ------ | ------------------- | ----------------------- | ---------------- |
+| GET    | `/api/books`        | Menampilkan semua buku  | Semua user login |
+| GET    | `/api/books/{book}` | Menampilkan detail buku | Semua user login |
+| POST   | `/api/books`        | Menambahkan buku        | Admin, Petugas   |
+| PUT    | `/api/books/{book}` | Mengubah data buku      | Admin, Petugas   |
+| DELETE | `/api/books/{book}` | Menghapus buku          | Admin            |
+
+### Loans
+
+| Method | Endpoint                   | Keterangan                    | Auth |
+| ------ | -------------------------- | ----------------------------- | ---- |
+| GET    | `/api/loans`               | Menampilkan data peminjaman   | Ya   |
+| POST   | `/api/loans`               | Membuat peminjaman            | Ya   |
+| GET    | `/api/loans/{loan}`        | Menampilkan detail peminjaman | Ya   |
+| PUT    | `/api/loans/{loan}/return` | Mengembalikan buku            | Ya   |
+
+## Validasi Buku
+
+Data buku yang ditambahkan harus memenuhi validasi:
+
+* `judul` wajib diisi
+* `penulis` wajib diisi
+* `penerbit` wajib diisi
+* `category_id` wajib diisi dan harus terdaftar
+* `stok` wajib berupa integer dan minimal `0`
+* `tahun_terbit` wajib berupa 4 digit
+* Tahun terbit minimal 1900
+* Tahun terbit tidak boleh melebihi tahun sekarang
+
+Jika validasi gagal, API mengembalikan HTTP status:
+
+```text
+422 Unprocessable Content
+```
+
+## Sistem Peminjaman
+
+Saat pengguna melakukan peminjaman:
+
+1. Sistem memeriksa ketersediaan stok buku.
+2. Jika stok habis, peminjaman ditolak.
+3. Jika stok tersedia, data peminjaman dibuat.
+4. Stok buku dikurangi sebanyak 1.
+5. Lama masa peminjaman adalah 7 hari.
+6. Status awal peminjaman adalah `dipinjam`.
+
+Contoh request:
+
+```json
+{
+    "buku_id": 1
+}
+```
+
+## Sistem Pengembalian dan Denda
+
+Saat buku dikembalikan:
+
+1. Status peminjaman berubah menjadi `dikembalikan`.
+2. Tanggal pengembalian dicatat.
+3. Stok buku bertambah 1.
+4. Sistem mengecek apakah pengembalian melewati tanggal jatuh tempo.
+5. Jika terlambat, sistem menghitung denda otomatis.
+
+Besarnya denda:
+
+```text
+Rp2.000 × jumlah hari keterlambatan
+```
+
+Contoh:
+
+| Keterlambatan |   Denda |
+| ------------: | ------: |
+|        0 hari |     Rp0 |
+|        1 hari | Rp2.000 |
+|        2 hari | Rp4.000 |
+|        3 hari | Rp6.000 |
+
+## Contoh Request Login
+
+```http
+POST /api/login
+```
+
+Request body:
+
+```json
+{
+    "email": "petugas1@gmail.com",
+    "password": "password"
+}
+```
+
+Contoh response:
+
+```json
+{
+    "message": "Login Berhasil!",
+    "user": {
+        "id": 4,
+        "name": "petugas1",
+        "email": "petugas1@gmail.com",
+        "role": "petugas"
+    },
+    "token": "<token>"
+}
+```
+
+Token tersebut digunakan sebagai Bearer Token untuk endpoint yang membutuhkan authentication.
+
+## Contoh Request Menambahkan Buku
+
+```http
+POST /api/books
+```
+
+Request body:
+
+```json
+{
+    "judul": "Grandmaster of Demonic Cultivation",
+    "penulis": "Mo Xiang Tong Xiu",
+    "penerbit": "Jinjiang Literature",
+    "category_id": 1,
+    "stok": 5,
+    "tahun_terbit": 2016
+}
+```
+
+## Contoh Request Peminjaman
+
+```http
+POST /api/loans
+```
+
+Request body:
+
+```json
+{
+    "buku_id": 1
+}
+```
+
+## Contoh Request Pengembalian
+
+```http
+PUT /api/loans/{loan}/return
+```
+
+Tidak membutuhkan request body.
+
+Sistem akan otomatis menentukan tanggal pengembalian dan menghitung denda apabila terdapat keterlambatan.
+
+## Testing API
+
+API dapat diuji menggunakan **Postman**.
+
+Pastikan:
+
+1. Jalankan Laravel menggunakan `php artisan serve`.
+2. Gunakan URL `http://localhost:8000`.
+3. Login untuk mendapatkan Bearer Token.
+4. Masukkan token pada menu **Authorization → Bearer Token**.
+5. Kirim request sesuai endpoint yang ingin diuji.
+
+## Struktur Database
+
+Sistem menggunakan beberapa tabel utama:
+
+* `users`
+* `categories`
+* `books`
+* `loans`
+* `personal_access_tokens`
+
+Dokumen ERD dan rancangan skema tabel disertakan secara terpisah dalam submission project.
+
+## Source Code
+
+Source code backend lengkap tersedia pada repository project BacaPedia.
+
+## Catatan
+
+File `.env` tidak disertakan dalam repository karena berisi konfigurasi environment lokal. Gunakan `.env.example` sebagai template konfigurasi.
