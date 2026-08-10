@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>User - BacaPedia</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <header id="navbar" class="navbar"></header>
+
+    <main class="page">
+
+        <!-- Header -->
+        <div class="page-header">
+
+            <div>
+                <h1>Kelola User</h1>
+                <p>
+                    Kelola akun pengguna dan role dalam sistem BacaPedia.
+                </p>
+            </div>
+
+            <button
+                id="addUserBtn"
+                class="btn btn-amber"
+            >
+                + Tambah User
+            </button>
+
+        </div>
+
+
+        <!-- Alert -->
+        <div
+            id="errorAlert"
+            class="alert alert-error"
+        ></div>
+
+        <div
+            id="successAlert"
+            class="alert alert-success"
+        ></div>
+
+
+        <!-- Loading -->
+        <div
+            id="loadingText"
+            class="loading-text"
+        >
+            Memuat data user...
+        </div>
+
+
+        <!-- Empty State -->
+        <div
+            id="emptyState"
+            class="empty-state"
+            style="display: none;"
+        >
+            Belum ada user.
+        </div>
+
+
+        <!-- Table -->
+        <div class="card">
+
+            <table
+                id="usersTable"
+                style="display: none;"
+            >
+
+                <thead>
+                    <tr>
+                        <th>Nama</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+
+                <tbody id="usersTableBody"></tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+
+    <!-- ==================================================
+         Modal Tambah User
+         ================================================== -->
+
+    <div
+        id="userModal"
+        class="modal-backdrop"
+    >
+
+        <div class="modal">
+
+            <h2 id="userModalTitle">
+                Tambah User
+            </h2>
+
+
+            <!-- Error form -->
+            <div
+                id="userFormError"
+                class="alert alert-error"
+            ></div>
+
+
+            <form id="userForm">
+
+                <!-- Nama -->
+                <label for="name">
+                    Nama
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Masukkan nama"
+                    required
+                >
+
+
+                <!-- Email -->
+                <label for="email">
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Masukkan email"
+                    required
+                >
+
+
+                <!-- Password -->
+                <label for="password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Masukkan password"
+                    minlength="6"
+                    required
+                >
+
+
+                <!-- Role -->
+                <label for="role">
+                    Role
+                </label>
+
+                <select
+                    id="role"
+                    name="role"
+                    required
+                >
+
+                    <option value="anggota">
+                        Anggota
+                    </option>
+
+                    <option value="petugas">
+                        Petugas
+                    </option>
+
+                    <option value="admin">
+                        Admin
+                    </option>
+
+                </select>
+
+
+                <!-- Button -->
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-outline"
+                        onclick="closeUserModal()"
+                    >
+                        Batal
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-amber"
+                    >
+                        Simpan
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- JavaScript -->
+    <script src="js/api.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/users.js"></script>
+
+</body>
+
+</html>

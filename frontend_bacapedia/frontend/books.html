@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daftar Buku — BacaPedia</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="navbar" id="navbar"></div>
+
+  <div class="page">
+    <div class="page-header">
+      <div>
+        <h1>Daftar Buku</h1>
+        <p>Koleksi buku yang tersedia di perpustakaan</p>
+      </div>
+      <button class="btn btn-amber" id="addBookBtn" style="display:none;">+ Tambah Buku</button>
+    </div>
+
+    <div class="alert alert-error" id="errorAlert"></div>
+    <div class="alert alert-success" id="successAlert"></div>
+
+    <div class="card">
+      <div id="loadingText" class="loading-text">Memuat data buku...</div>
+      <table id="booksTable" style="display:none;">
+        <thead>
+          <tr>
+            <th>Judul</th>
+            <th>Penulis</th>
+            <th>Kategori</th>
+            <th>Stok</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="booksTableBody"></tbody>
+      </table>
+      <div id="emptyState" class="empty-state" style="display:none;">Belum ada buku.</div>
+    </div>
+  </div>
+
+  <!-- Modal Tambah/Edit Buku -->
+  <div class="modal-backdrop" id="bookModal">
+    <div class="modal">
+      <h2 id="bookModalTitle">Tambah Buku</h2>
+      <div class="alert alert-error" id="bookFormError"></div>
+      <form id="bookForm">
+        <input type="hidden" id="bookId" />
+
+        <label for="judul">Judul</label>
+        <input type="text" id="judul" required />
+
+        <label for="penulis">Penulis</label>
+        <input type="text" id="penulis" required />
+
+        <label for="penerbit">Penerbit</label>
+        <input type="text" id="penerbit" required />
+
+        <label for="category_id">Kategori</label>
+        <select id="category_id" required></select>
+
+        <label for="stok">Stok</label>
+        <input type="number" id="stok" min="0" required />
+
+        <label for="tahun_terbit">Tahun Terbit</label>
+        <input type="number" id="tahun_terbit" min="1900" max="2100" required />
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeBookModal()">Batal</button>
+          <button type="submit" class="btn btn-primary" id="bookFormSubmit" style="width:auto;">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/books.js"></script>
+</body>
+</html>

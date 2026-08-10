@@ -38,16 +38,37 @@ class LoanController extends Controller
         $user = $request->user();
 
         return DB::transaction(function () use ($request, $user) {
-            $book = Book::lockForUpdate()->findOrFail($request->buku_id);
-
-            if ($book->stok <= 0) {
+            $jumlahPinjaman = Loan::where('user_id', $user->id)
+                ->where('status', 'dipinjam')
+                ->count();
+    
+            if ($jumlahPinjaman >= 3) {
                 return response()->json([
-                    'message' => 'Stok buku tidak tersedia.',
-                    'errors' => [
-                        'buku_id' => ['Stok buku habis.'],
-                    ],
+                    'message' => 'Maksimal buku yang dapat Anda pinjam adalah 3 buku.'
                 ], 422);
             }
+
+        $book = Book::lockForUpdate()->findOrFail($request->buku_id);
+
+        $existingLoan = Loan::where('user_id', $user->id)
+            ->where('buku_id', $book->id)
+            ->where('status', 'dipinjam')
+            ->exists();
+
+        if ($existingLoan) {
+            return response()->json([
+                'message' => 'Anda masih sedang meminjam buku ini.'
+            ], 422);
+        }
+
+        if ($book->stok <= 0) {
+            return response()->json([
+                'message' => 'Stok buku tidak tersedia.',
+                'errors' => [
+                'buku_id' => ['Stok buku habis.'],
+                ],
+            ], 422);
+        }
 
             $loan = Loan::create([
                 'user_id' => $user->id,
@@ -109,7 +130,7 @@ class LoanController extends Controller
 
             $denda = 0;
             if ($today->gt($loan->tanggal_jatuh_tempo)) {
-                $telat = $today->diffInDays($loan->tanggal_jatuh_tempo);
+                $telat = $loan->tanggal_jatuh_tempo->diffInDays($today);
                 $denda = $telat * self::DENDA_PER_HARI;
             }
 

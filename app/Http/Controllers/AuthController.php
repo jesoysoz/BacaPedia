@@ -14,7 +14,11 @@ class AuthController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
+            'password' => 'required|string|min:6|confirmed',
+        ],
+        [
+            'password.min' => 'Password yang dimasukan harus berjumlah minimal 6 karakter.',
+            'password.confirmed' => 'Password dan Konfirmasi Password anda tidak sesuai, silahkan input kembali.',
         ]);
 
         $user = User::create([
@@ -25,7 +29,7 @@ class AuthController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'User registered successfully', 
+            'message' => 'User berhasil terdaftar!', 
             'user' => $user
             ], 201);
     }
